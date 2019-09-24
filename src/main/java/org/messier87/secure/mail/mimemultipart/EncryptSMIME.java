@@ -34,7 +34,7 @@ import org.bouncycastle.mail.smime.SMIMEException;
  */
 public class EncryptSMIME extends EncryptMail{
      /**
-     * Contructor
+     * Constructor
      * @param puk the public key used to encrypt the emails.
      */
     public EncryptSMIME(byte[] puk){
