@@ -31,7 +31,6 @@ import org.bouncycastle.mail.smime.SMIMEException;
 
 /**
  * This class implements the encryption of emails with SMIME
- * @author ESTEFANIA
  */
 public class EncryptSMIME extends EncryptMail{
      /**
