@@ -7,11 +7,25 @@
   <groupId>org.messier87.secure</groupId>
   <artifactId>secure-mail</artifactId>
   <version>1.0.0</version>
-
+  <packaging>jar</packaging>
+  
   <name>secure-mail</name>
   <!-- FIXME change it to the project's website -->
   <url>https://github.com/estegp/securemail</url>
 
+  <licenses>
+    <license>
+        <name>MIT License</name>
+        <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+</licenses>
+  
+  <scm>
+    <connection>scm:git:git://github.com/estegp/securemail.git</connection>
+    <developerConnection>scm:git:ssh://github.com:estegp/securemail.git</developerConnection>
+    <url>https://github.com/estegp/securemail/tree/master</url>
+</scm>
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
