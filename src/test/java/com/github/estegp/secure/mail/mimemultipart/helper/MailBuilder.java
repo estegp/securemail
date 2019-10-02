@@ -1,4 +1,4 @@
-package org.messier87.secure.mail.mimemultipart.helper;
+package com.github.estegp.secure.mail.mimemultipart.helper;
 
 import javax.mail.BodyPart;
 import javax.mail.Message;

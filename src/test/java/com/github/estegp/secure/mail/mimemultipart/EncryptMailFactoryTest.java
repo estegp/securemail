@@ -1,4 +1,4 @@
-package org.messier87.secure.mail.mimemultipart;
+package com.github.estegp.secure.mail.mimemultipart;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

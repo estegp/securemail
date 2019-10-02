@@ -23,7 +23,7 @@
   <developers>
     <developer>
       <name>este gp</name>
-      <email></email>
+      <email>este.gutierrez.perez@gmail.com</email>
     </developer>
 
   </developers>
@@ -31,7 +31,7 @@
   <scm>
     <connection>scm:git:git://github.com/estegp/securemail.git</connection>
     <developerConnection>scm:git:ssh://github.com:estegp/securemail.git</developerConnection>
-    <url>https://github.com/estegp/securemail/tree/master</url>
+    <url>https://github.com/estegp/securemail/tree/V_1_0_0</url>
   </scm>
 
   <distributionManagement>

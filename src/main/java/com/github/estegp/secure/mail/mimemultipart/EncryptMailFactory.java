@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.messier87.secure.mail.mimemultipart;
+package com.github.estegp.secure.mail.mimemultipart;
 
 /**
  * This class if a factory that will get the class that implements the 

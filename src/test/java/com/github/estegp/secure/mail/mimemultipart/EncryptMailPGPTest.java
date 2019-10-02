@@ -1,13 +1,10 @@
-package org.messier87.secure.mail.mimemultipart;
+package com.github.estegp.secure.mail.mimemultipart;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.messier87.secure.mail.mimemultipart.helper.MailBuilder;
+import com.github.estegp.secure.mail.mimemultipart.helper.MailBuilder;
 
-import javax.mail.BodyPart;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.internet.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 
