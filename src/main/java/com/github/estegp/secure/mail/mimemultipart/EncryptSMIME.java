@@ -20,6 +20,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
+import com.github.estegp.secure.mail.exceptions.EncryptMailException;
 import org.bouncycastle.cms.CMSAlgorithm;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
@@ -27,6 +29,7 @@ import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.openpgp.PGPException;
 
 /**
  * This class implements the encryption of emails with SMIME
@@ -41,35 +44,30 @@ public class EncryptSMIME extends EncryptMail{
     }
     
     @Override
-    public MimeBodyPart encryptMultiPart( MimeMultipart msg, MimeMessage message){
-    
-        try {
+    public MimeBodyPart encryptMultiPart( MimeMultipart msg, MimeMessage message) throws EncryptMailException {
+        try{
             // 1. Sets the msg inside mimebody part
             MimeBodyPart mp = new MimeBodyPart();
             mp.setContent(msg);
             // 2. Encrypts the body part
             return this.encryptData(mp, message);
-        } catch (MessagingException ex) {
-            Logger.getLogger(EncryptSMIME.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (MessagingException ex){
+            throw new EncryptMailException(ex);
         }
-        return null;
     }
     
     @Override
-    public MimeBodyPart encryptData( MimeBodyPart msg, MimeMessage message){
-    
+    public MimeBodyPart encryptData( MimeBodyPart msg, MimeMessage message) throws EncryptMailException{
         try {
             // The library Directly encrypts the msg and generates a new body part
-            SMIMEEnvelopedGenerator  gen = new SMIMEEnvelopedGenerator();
+            SMIMEEnvelopedGenerator gen = new SMIMEEnvelopedGenerator();
             gen.addRecipientInfoGenerator(this.loadEncKey().setProvider("BC"));
-            MimeBodyPart mp = gen.generate(
+            return gen.generate(
                     msg, new JceCMSContentEncryptorBuilder(CMSAlgorithm.RC2_CBC
-                        ).setProvider("BC").build());
-            return mp;
-        } catch (CertificateException | SMIMEException | CMSException | IOException ex) {
-            Logger.getLogger(EncryptSMIME.class.getName()).log(Level.SEVERE, null, ex);
+                    ).setProvider("BC").build());
+        }catch (CertificateException | SMIMEException | CMSException | IOException ex){
+            throw new EncryptMailException(ex);
         }
-        return null;
     }
     
     /**

@@ -21,6 +21,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
+import com.github.estegp.secure.mail.exceptions.EncryptMailException;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.openpgp.PGPCompressedData;
 import org.bouncycastle.openpgp.PGPCompressedDataGenerator;
@@ -51,8 +53,8 @@ public class EncryptMailPGP extends EncryptMail{
 
    
     @Override
-    public MimeBodyPart encryptMultiPart(MimeMultipart msg, MimeMessage message) {
-        try {
+    public MimeBodyPart encryptMultiPart(MimeMultipart msg, MimeMessage message) throws EncryptMailException {
+        try{
             // 1. Puts the msg as the message content
             message.setContent(msg, msg.getContentType());
             // 2. Convert the message to a byte array
@@ -64,14 +66,13 @@ public class EncryptMailPGP extends EncryptMail{
             return this.buildMail(
                 new String(((ByteArrayOutputStream)crypt).toByteArray())
             );
-        } catch (IOException | PGPException | MessagingException ex) {
-            Logger.getLogger(EncryptMailPGP.class.getName()).log(Level.SEVERE, null, ex);
-            return  null;
+        }catch (IOException | PGPException | MessagingException ex){
+            throw new EncryptMailException(ex);
         }
     }
 
     @Override
-    public MimeBodyPart encryptData(MimeBodyPart msg, MimeMessage message) {
+    public MimeBodyPart encryptData(MimeBodyPart msg, MimeMessage message) throws EncryptMailException {
         try {
             // 0. Build message
             MimeMultipart multipart = new MimeMultipart("related");
@@ -82,15 +83,14 @@ public class EncryptMailPGP extends EncryptMail{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             message.writeTo(out);
             // 3. Encrypt the message
-            OutputStream crypt = this.encrypt( this.loadKey(), out.toByteArray());
+            OutputStream crypt = this.encrypt(this.loadKey(), out.toByteArray());
             // 4. Build the MimeBodypart from the encrypted message
             return this.buildMail(
-                new String(((ByteArrayOutputStream)crypt).toByteArray())
+                    new String(((ByteArrayOutputStream) crypt).toByteArray())
             );
-            
-        } catch (IOException | PGPException | MessagingException ex) {
-            Logger.getLogger(EncryptMailPGP.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+        }catch (IOException | PGPException | MessagingException ex)
+        {
+            throw new EncryptMailException(ex);
         }
     }
     
@@ -135,8 +135,7 @@ public class EncryptMailPGP extends EncryptMail{
      */
     private PGPPublicKey loadKey() throws IOException, PGPException{
         InputStream keyIn = new ByteArrayInputStream(this.puk);    // ByteArrayOutputStream Close() method does nothing, no need to call it
-        PGPPublicKey key = readPublicKey(keyIn);
-        return key;
+        return readPublicKey(keyIn);
     }
     
     /**
@@ -150,7 +149,7 @@ public class EncryptMailPGP extends EncryptMail{
         PGPPublicKeyRingCollection pgpPub = new PGPPublicKeyRingCollection(
         PGPUtil.getDecoderStream(input), new JcaKeyFingerprintCalculator());
 
-        // Reads each key in the inpout stream until it finds the encryption key
+        // Reads each key in the input stream until it finds the encryption key
         Iterator keyRingIter = pgpPub.getKeyRings();
         while (keyRingIter.hasNext())
         {
@@ -210,7 +209,7 @@ public class EncryptMailPGP extends EncryptMail{
      * @return the file
      */
     private File writeTempFile(byte[] data) throws IOException{
-        File temp = File.createTempFile("pgp", null);;
+        File temp = File.createTempFile("pgp", null);
         try(FileOutputStream fos = new FileOutputStream(temp)){
             fos.write(data);
         }

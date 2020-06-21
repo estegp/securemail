@@ -5,9 +5,17 @@
  */
 package com.github.estegp.secure.mail.mimemultipart;
 
+import com.github.estegp.secure.mail.exceptions.EncryptMailException;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.openpgp.PGPException;
+
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.IOException;
+import java.security.cert.CertificateException;
 
 /**
  * This class generalizes the encryption of email
@@ -21,7 +29,7 @@ public abstract class EncryptMail {
      * @param message the message that will contain the data
      * @return a mimebody part with the encrypted data
      */
-    public abstract MimeBodyPart encryptMultiPart( MimeMultipart msg, MimeMessage message);
+    public abstract MimeBodyPart encryptMultiPart( MimeMultipart msg, MimeMessage message) throws EncryptMailException;
 
     /**
      * This method encrypts the mime bodypart of an email
@@ -29,5 +37,5 @@ public abstract class EncryptMail {
      * @param message the message that will contain the data
      * @return a mimebody part with the encrypted data
      */
-    public abstract MimeBodyPart encryptData( MimeBodyPart msg, MimeMessage message);
+    public abstract MimeBodyPart encryptData( MimeBodyPart msg, MimeMessage message) throws EncryptMailException;
 }

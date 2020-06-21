@@ -1,5 +1,7 @@
 package com.github.estegp.secure.mail.mimemultipart;
 
+import com.github.estegp.secure.mail.exceptions.EncryptMailException;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import com.github.estegp.secure.mail.mimemultipart.helper.MailBuilder;
@@ -26,6 +28,7 @@ public class EncryptMailPGPTest {
     @BeforeAll
     public static void SetUp() throws IOException, URISyntaxException, MessagingException {
         URL keyFileURL = EncryptMailPGPTest.class.getClassLoader().getResource("for_testing_only.pgp");
+        if(keyFileURL == null) return;
         File dir = new File(keyFileURL.toURI());
         try (InputStream stream = new FileInputStream(dir)){
             EncryptMailPGPTest.pgpKey = stream.readAllBytes();
@@ -38,15 +41,27 @@ public class EncryptMailPGPTest {
 
 
     @Test
-    public void encryptMultiPart() {
-        MimeBodyPart body = EncryptMailPGPTest.encryptor.encryptMultiPart(EncryptMailPGPTest.msg, EncryptMailPGPTest.message);
-        assertNotNull(body);
+    public void encryptMultiPart()  {
+        try{
+            MimeBodyPart body = EncryptMailPGPTest.encryptor.encryptMultiPart(EncryptMailPGPTest.msg, EncryptMailPGPTest.message);
+            assertNotNull(body);
+        }catch (EncryptMailException ex){
+            fail("Expected Exception: 'EncryptMailException'");
+        }catch (Exception ex){
+            fail("Unexpected Exception");
+        }
     }
 
     @Test
     public void encryptData() {
-        MimeBodyPart body = EncryptMailPGPTest.encryptor.encryptData(EncryptMailPGPTest.bodyPart, EncryptMailPGPTest.message);
-        assertNotNull(body);
+        try{
+            MimeBodyPart body = EncryptMailPGPTest.encryptor.encryptData(EncryptMailPGPTest.bodyPart, EncryptMailPGPTest.message);
+            assertNotNull(body);
+        }catch (EncryptMailException ex){
+            fail("Expected Exception: 'EncryptMailException'");
+        }catch (Exception ex){
+            fail("Unexpected Exception");
+        }
     }
 
 

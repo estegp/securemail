@@ -1,5 +1,6 @@
 package com.github.estegp.secure.mail.mimemultipart;
 
+import com.github.estegp.secure.mail.exceptions.EncryptMailException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import com.github.estegp.secure.mail.mimemultipart.helper.MailBuilder;
@@ -28,6 +29,7 @@ public class EncryptSMIMETest {
     @BeforeAll
     public static void SetUp() throws IOException, URISyntaxException, MessagingException {
         URL keyFileURL = EncryptSMIMETest.class.getClassLoader().getResource("for_testing_only.smime");
+        if(keyFileURL == null) return;
         File dir = new File(keyFileURL.toURI());
         try (InputStream stream = new FileInputStream(dir)){
             EncryptSMIMETest.mimeKey = stream.readAllBytes();
@@ -41,15 +43,25 @@ public class EncryptSMIMETest {
 
     @Test
     public void encryptMultiPart() {
-        MimeMultipart msg = new MimeMultipart();
-        MimeBodyPart body = EncryptSMIMETest.encryptor.encryptMultiPart(msg, EncryptSMIMETest.message);
-        assertNotNull(body);
+        try{
+            MimeBodyPart body = EncryptSMIMETest.encryptor.encryptMultiPart(EncryptSMIMETest.msg, EncryptSMIMETest.message);
+            assertNotNull(body);
+        }catch (EncryptMailException ex){
+            fail("Expected Exception: 'EncryptMailException'");
+        }catch (Exception ex){
+            fail("Unexpected Exception");
+        }
     }
 
     @Test
     public void encryptData() {
-        MimeBodyPart msg = new MimeBodyPart();
-        MimeBodyPart body = EncryptSMIMETest.encryptor.encryptData(msg, EncryptSMIMETest.message);
-        assertNotNull(body);
+        try{
+            MimeBodyPart body = EncryptSMIMETest.encryptor.encryptData(EncryptSMIMETest.bodyPart, EncryptSMIMETest.message);
+            assertNotNull(body);
+        }catch (EncryptMailException ex){
+            fail("Expected Exception: 'EncryptMailException'");
+        }catch (Exception ex){
+            fail("Unexpected Exception");
+        }
     }
 }
